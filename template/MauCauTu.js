@@ -25,7 +25,7 @@ export const MauCauTu = [
     ["[A-Z] là trung điểm của [A-Z][A-Z]","0 là trung điểm của 1"],
     ["[A-Z] nằm giữa điểm [A-Z] [A-Z]","0 nằm giữa 1, 2"],
     ["[A-Z] là trung điểm của dây cung [A-Z][A-Z]","0 là trung điểm 1"],
-    
+    ["đường tròn [A-Z] [A-Z]", "đường tròn tâm 0 bán kính 1"]
 ];
 
 //

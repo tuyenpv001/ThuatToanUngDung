@@ -3,7 +3,8 @@ import { MauCauGiaThietGiaTri} from './template/MauCauGiaTri.js';
 import { MauCauHinh } from './template/MauCauHinh.js';
 import { BieuThuc} from './template/BieuThuc.js';
 import { MauCauKetLuan } from './template/MauCauKetLuan.js'; 
-  
+import { MauCauChungMinh } from './template/MauCauChungMinh.js';
+
 let DeBai = document.querySelector('.debai');
 let GiaThiet = document.querySelector('.giathiet');
 let KetLuan = document.querySelector('.ketkuan');
@@ -64,12 +65,7 @@ btnKetQuan.addEventListener('click', function(e){
     const debaiStrQuyUoc = XuLyChuyenDoiQuyUoc(debaiStr, QuyUocChung);
     // Xóa các từ thừa
     const debaiStrXoaTuThua = XoaTuThua(debaiStrQuyUoc);
-    
-    // console.log(debaiStr);
-    // console.log(debaiStrQuyUoc);
     console.log(debaiStrXoaTuThua);
-    
-
 // TODO: Xử lý nhận dạng tách thành 2 phần GIẢ THIẾT và KẾT LUẬN
     const {GiaThietTemp, KetLuanTemp} = TachGiathietKetLuan(debaiStrXoaTuThua);
     GiaThiet.value = GiaThietTemp;
@@ -80,9 +76,6 @@ btnKetQuan.addEventListener('click', function(e){
     XuLyKetLuan(KetLuanTemp);
 
 })
-
-
-
 
 
 /* =================================
@@ -108,9 +101,25 @@ function TachGiathietKetLuan(str){
         if(checkExit) break;
     }
     //console.log(breakPoint);
+
     strTemp = strArr.slice(breakPoint);
+    let breakPointKL;
+    for(let x = 0; x < strTemp.length; x++){
+        if(strTemp[x].match(/[b]iết/)){
+            breakPointKL = x;
+            break;
+        }
+    }
+    
+    // console.log(strTemp);
+    let strGTBoSung = strTemp.slice(breakPointKL, strTemp.length);
+    strTemp = strTemp.slice(0,breakPointKL);
+    console.log(strTemp);
+    console.log(strGTBoSung);
+
+
     return {
-        'GiaThietTemp': strArr.slice(0,breakPoint).join(' '),
+        'GiaThietTemp': strArr.slice(0,breakPoint).join(' ') +' '+strGTBoSung.join(' '),
         'KetLuanTemp': strTemp.join(' ')
     }
 
@@ -213,7 +222,7 @@ function XuLyGiaThiet(giathiet) {
     }
 
     console.log(KetQuaCau);
-   console.log(giathiet);
+    console.log(giathiet);
 
     let GiaThietConLai = [], GiaThietTempTrung = [], GiaThietConLaiMau = [],regdexHinh, strConLai;
    for(let p = 0; p < MauCauHinh.length; p++){
@@ -286,8 +295,27 @@ function XuLyKetLuan(strKetLuan) {
 
 
     console.log(strKetLuan);
+    
+    if(strKetLuan.match(/[A-Z][A-Z][A-Z]/g)){
+        GOC = strKetLuan.match(/[A-Z][A-Z][A-Z]/g);
+        strKetLuan = strKetLuan.replace(/[A-Z][A-Z][A-Z]/g,'');
+    }
+    console.log(strKetLuan);
+    GOC = XuLyQuyUocGoc(GOC);
 
-    KetLuan.value = [...CHUNGMINH,...TAMGIAC,...TUGIAC,...DOANTHANG,...GOC].join(',') + ';';
+    // CHUNGMINH = XuLyTrungKhopMau(MauCauChungMinh,strKetLuan);
+
+    console.log(CHUNGMINH);
+
+    if(strKetLuan.match(/[A-Z][A-Z]/g)){
+        DOANTHANG = strKetLuan.match(/[A-Z][A-Z]/g);
+        strKetLuan = strKetLuan.replace(/[A-Z][A-Z][A-Z]/g,'');
+    }
+    console.log(strKetLuan);
+
+    if(strKetLuan.match(/[Tt]ính/))
+        KetLuan.value = 'Tính:' + [...CHUNGMINH,...TAMGIAC,...TUGIAC,...DOANTHANG,...GOC].join(',') + ';';
+    else KetLuan.value = 'Chứng minh rằng: ' + [...CHUNGMINH,...TAMGIAC,...TUGIAC,...DOANTHANG,...GOC].join(',') + ';';
    
 }
 
@@ -321,6 +349,45 @@ function XuLyChuyenDoiChuoi(arr, str){
     }
     return arrKetQua;
 }
+
+function XuLyQuyUocGoc(arr){
+    let tempName;
+    for(let i = 0; i < arr.length; i++){
+        tempName = 'Góc('+arr[i]+')';
+        arr[i] = tempName;
+    }
+
+
+    return arr;
+}
+
+function XuLyTrungKhopMau(arr, strKL){
+    let Mau = [], redexMau, strTemp,strMauCau,strMauTemp;
+    for(let i = 0; i < arr.length; i++){
+        redexMau = new RegExp(arr[i][0], 'g');
+        if(strKL.match(redexMau)){
+            strTemp = [...strKL.match(redexMau)];
+            strMauCau = arr[i][1];
+            let temp = []; temp.push(strTemp); temp.push(strMauCau);
+            strMauTemp.push(temp);
+            strKL = strKL.replace(redexMau,'');
+        } else continue;
+    }
+
+    console.log(strTemp);
+    console.log(strMauTemp);
+    console.log(strKL);
+
+    let strMauArr;
+    for(let n = 0; n < strMauTemp.length; n++){
+        console.log(strMauTemp[n]);
+        strMauArr = XuLyChuyenDoiChuoi(strMauTemp[n][0], strMauTemp[n][1]);
+        console.log(strMauArr);
+        Mau.push(strMauArr);      
+    }
+    return Mau;
+}
+
 
 
 /* ================================
