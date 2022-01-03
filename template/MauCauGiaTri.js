@@ -8,5 +8,6 @@ export const MauCauGiaThietGiaTri = [
     "[Dd]iện tích hình chữ nhật [A-Z][A-Z][A-Z][A-Z] = \\d*",
     "[A-Z][A-z](|\\s*)=(\\s*|)(\\d*)",
     "[A-Z][A-Z] = (\\d*)",
-    "[Đđ]ường tròn tâm [A-Z] bán kính \\d*"
+    
+    // "[Đđ]ường tròn tâm [A-Z] bán kính \\d*"
 ];

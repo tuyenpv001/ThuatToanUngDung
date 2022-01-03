@@ -82,16 +82,16 @@ btnKetQuan.addEventListener('click', function(e){
 Xác định phần giả thuyết và kết luận dựa vào các từ đăc trưng và đồng nghĩa
 ====================================*/
 function TachGiathietKetLuan(str){
-    let strTemp;
-    let strArr = convertStrtoArray(str.trim(),' ');
-    console.log(strArr)
+    let strKetLuanTemp;
+    let strGTTemp = convertStrtoArray(str.trim(),' ');
+    console.log(strGTTemp)
     let wordTach = convertStrtoArray(readTextFile('data/QuyUocTachGTKL.txt'), ';');
     let breakPoint, checkExit = false;
 
     for(let i= 0; i< wordTach.length; i++){
 
-        for(let j = 0; j< strArr.length; j++){
-            if(strArr[j] === wordTach[i]){
+        for(let j = 0; j< strGTTemp.length; j++){
+            if(strGTTemp[j] === wordTach[i]){
                 breakPoint = j;
                 checkExit = true;
                 break;
@@ -102,25 +102,27 @@ function TachGiathietKetLuan(str){
     }
     //console.log(breakPoint);
 
-    strTemp = strArr.slice(breakPoint);
-    let breakPointKL;
-    for(let x = 0; x < strTemp.length; x++){
-        if(strTemp[x].match(/[b]iết/)){
+    strKetLuanTemp = strGTTemp.slice(breakPoint);
+    let breakPointKL, checkGTBoSung = false;
+    for(let x = 0; x < strKetLuanTemp.length; x++){
+        if(strKetLuanTemp[x].match(/[b]iết/)){
             breakPointKL = x;
+            checkGTBoSung = true;
             break;
         }
     }
-    
-    // console.log(strTemp);
-    let strGTBoSung = strTemp.slice(breakPointKL, strTemp.length);
-    strTemp = strTemp.slice(0,breakPointKL);
-    console.log(strTemp);
+    let strGTBoSung = [];
+    if(checkGTBoSung){
+        strGTBoSung = strKetLuanTemp.slice(breakPointKL, strKetLuanTemp.length);
+        strKetLuanTemp = strKetLuanTemp.slice(0,breakPointKL);
+    }
+    console.log(strKetLuanTemp);
     console.log(strGTBoSung);
 
 
     return {
-        'GiaThietTemp': strArr.slice(0,breakPoint).join(' ') +' '+strGTBoSung.join(' '),
-        'KetLuanTemp': strTemp.join(' ')
+        'GiaThietTemp': strGTTemp.slice(0,breakPoint).join(' ') +' '+strGTBoSung.join(' '),
+        'KetLuanTemp': strKetLuanTemp.join(' ')
     }
 
 }
@@ -247,17 +249,9 @@ function XuLyGiaThiet(giathiet) {
 //    const [strKQ] = GiaThietTempTrung;
 //    console.log(strKQ);
 
-   let KQGiaThiet = '';
-   if(GTHinh.length === 0) KQGiaThiet = ''; 
-    else KQGiaThiet +=GTHinh.join(';')
-   if(KetQuaCau.length === 0) KQGiaThiet 
-   else KQGiaThiet += LocGiaTri.join(';');
-
-   if(LocGiaTri.length === 0) KQGiaThiet =  KQGiaThiet;
-
    if(GTHinh.length == 0)
-        GiaThiet.value = [...GTHinh,...KetQuaCau,...LocGiaTri].join(';') + ';';
-    else  GiaThiet.value = 'Cho ' + [...GTHinh,...KetQuaCau,...LocGiaTri].join(';') + ';';
+        GiaThiet.value = [...GTHinh,...KetQuaCau,...BieuThucKQ,...LocGiaTri].join(';') + ';';
+    else  GiaThiet.value = 'Cho ' + [...GTHinh,...KetQuaCau,...BieuThucKQ,...LocGiaTri].join(';') + ';';
 }
 
 
@@ -268,32 +262,36 @@ function XuLyGiaThiet(giathiet) {
 function XuLyKetLuan(strKetLuan) {
     let TAMGIAC = [], TUGIAC = [], DOANTHANG = [], GOC = [], CHUNGMINH = [];
     console.log(strKetLuan);
-    let regdexKetLuan, strTemp = [], strMauTemp = [], strMauCau;
+    // let regdexKetLuan, strTemp = [], strMauTemp = [], strMauCau;
 
-    for(let i = 0; i < MauCauKetLuan.length; i++){
-        regdexKetLuan = new RegExp(MauCauKetLuan[i][0], 'g');
-        if(strKetLuan.match(regdexKetLuan)){
-            strTemp = [...strKetLuan.match(regdexKetLuan)];
-            strMauCau = MauCauKetLuan[i][1];
-            let temp = []; temp.push(strTemp); temp.push(strMauCau);
-            strMauTemp.push(temp);
-            strKetLuan = strKetLuan.replace(regdexKetLuan,'');
-        } else continue;
-    }
+    // for(let i = 0; i < MauCauKetLuan.length; i++){
+    //     regdexKetLuan = new RegExp(MauCauKetLuan[i][0], 'g');
+    //     if(strKetLuan.match(regdexKetLuan)){
+    //         strTemp = [...strKetLuan.match(regdexKetLuan)];
+    //         strMauCau = MauCauKetLuan[i][1];
+    //         let temp = []; temp.push(strTemp); temp.push(strMauCau);
+    //         strMauTemp.push(temp);
+    //         strKetLuan = strKetLuan.replace(regdexKetLuan,'');
+    //     } else continue;
+    // }
 
-    console.log(strTemp);
-    console.log(strMauTemp);
+    // console.log(strTemp);
+    // console.log(strMauTemp);
+    // console.log(strKetLuan);
+
+    // let strMauArr;
+    // for(let n = 0; n < strMauTemp.length; n++){
+    //     console.log(strMauTemp[n]);
+    //     strMauArr = XuLyChuyenDoiChuoi(strMauTemp[n][0], strMauTemp[n][1]);
+    //     console.log(strMauArr);
+    //     TAMGIAC.push(strMauArr);      
+    // }
+    [TAMGIAC, strKetLuan] = XuLyTrungKhopMau(MauCauKetLuan,strKetLuan);
+    console.log(TAMGIAC);
+    
     console.log(strKetLuan);
-
-    let strMauArr;
-    for(let n = 0; n < strMauTemp.length; n++){
-        console.log(strMauTemp[n]);
-        strMauArr = XuLyChuyenDoiChuoi(strMauTemp[n][0], strMauTemp[n][1]);
-        console.log(strMauArr);
-        TAMGIAC.push(strMauArr);      
-    }
-
-
+    [CHUNGMINH, strKetLuan] = XuLyTrungKhopMau(MauCauChungMinh,strKetLuan);
+    console.log(CHUNGMINH);
     console.log(strKetLuan);
     
     if(strKetLuan.match(/[A-Z][A-Z][A-Z]/g)){
@@ -302,10 +300,6 @@ function XuLyKetLuan(strKetLuan) {
     }
     console.log(strKetLuan);
     GOC = XuLyQuyUocGoc(GOC);
-
-    // CHUNGMINH = XuLyTrungKhopMau(MauCauChungMinh,strKetLuan);
-
-    console.log(CHUNGMINH);
 
     if(strKetLuan.match(/[A-Z][A-Z]/g)){
         DOANTHANG = strKetLuan.match(/[A-Z][A-Z]/g);
@@ -319,11 +313,47 @@ function XuLyKetLuan(strKetLuan) {
    
 }
 
+
+function XuLyTrungKhopMau(arr, strKL){
+
+    let Mau = [], redexMau, strTemp,strMauCau,strMauTemp = [];
+
+    console.log(strKL);
+    
+    for(let i = 0; i < arr.length; i++){
+        redexMau = new RegExp(arr[i][0], 'g');
+        if(strKL.match(redexMau)){
+            strTemp = [...strKL.match(redexMau)];
+            strMauCau = arr[i][1];
+            let temp = []; temp.push(strTemp); temp.push(strMauCau);
+            strMauTemp.push(temp);
+            strKL = strKL.replace(redexMau,'');
+            console.log(strKL);
+            strKL = strKL;
+        } else continue;
+    }
+
+    // console.log(strTemp);
+    // console.log(strMauTemp);
+    // console.log(strKL);
+
+    let strMauArr;
+    for(let n = 0; n < strMauTemp.length; n++){
+        console.log(strMauTemp[n]);
+        strMauArr = XuLyChuyenDoiChuoi(strMauTemp[n][0], strMauTemp[n][1]);
+        console.log(strMauArr);
+        Mau.push(strMauArr);      
+    }
+    console.log(strKL);
+    return [Mau,strKL];
+}
+
+
 function XuLyChuyenDoiChuoi(arr, str){
     let arrStr, KetQuaKl, arrKetQua = [];
     console.log(arr);
     for(let i = 0; i < arr.length; i++){
-        // console.log(arr[i]);
+        console.log(arr[i]);
         KetQuaKl = '';
         arrStr = convertStrtoArray(arr[i],' ');
         // console.log(arrStr);
@@ -361,32 +391,6 @@ function XuLyQuyUocGoc(arr){
     return arr;
 }
 
-function XuLyTrungKhopMau(arr, strKL){
-    let Mau = [], redexMau, strTemp,strMauCau,strMauTemp;
-    for(let i = 0; i < arr.length; i++){
-        redexMau = new RegExp(arr[i][0], 'g');
-        if(strKL.match(redexMau)){
-            strTemp = [...strKL.match(redexMau)];
-            strMauCau = arr[i][1];
-            let temp = []; temp.push(strTemp); temp.push(strMauCau);
-            strMauTemp.push(temp);
-            strKL = strKL.replace(redexMau,'');
-        } else continue;
-    }
-
-    console.log(strTemp);
-    console.log(strMauTemp);
-    console.log(strKL);
-
-    let strMauArr;
-    for(let n = 0; n < strMauTemp.length; n++){
-        console.log(strMauTemp[n]);
-        strMauArr = XuLyChuyenDoiChuoi(strMauTemp[n][0], strMauTemp[n][1]);
-        console.log(strMauArr);
-        Mau.push(strMauArr);      
-    }
-    return Mau;
-}
 
 
 
