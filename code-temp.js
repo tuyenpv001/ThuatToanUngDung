@@ -454,3 +454,77 @@ console.log(strTuConLai);
         g = g.replace(j,c[j]);
     }
     console.log(g);
+
+    /* ================================
+    XỬ LÝ PHẦN KẾT LUẬN 
+====================================*/
+function XuLyKetLuan(strKetLuan) {
+    let strKLTemp, regdexKl;
+    let DOANTHANG = [], TAMGIAC = [], GOC = [], TUGIAC = [];
+    let indexItem = []
+    const QuyUocKetLuan = XuLyQuyUoc('data/QuyUocChoKetLuan.txt');
+
+    for(let i = 0; i < QuyUocKetLuan.length; i++){
+        regdexKl = new RegExp(QuyUocKetLuan[i][0],'g');
+        if(strKLTemp){
+            strKLTemp = strKLTemp.replace(regdexKl,QuyUocKetLuan[i][1]);
+        } else {
+            strKLTemp = strKetLuan.replace(regdexKl,QuyUocKetLuan[i][1]);
+        }
+    }
+    // console.log(strKLTemp);
+    const strKLTempArr = convertStrtoArray(strKLTemp.trim().replace(/\s+/g, ' '),' ');
+    let checkGoc = strKLTemp.trim().replace(/\s+/g, ' ');
+    console.log(strKLTempArr);
+    for(let i = 0; i < strKLTempArr.length; i++){
+        if(isUpper(strKLTempArr[i]) && strKLTempArr[i].length === 2){
+            DOANTHANG.push(strKLTempArr[i]);
+            continue;
+        }
+
+        if(isUpper(strKLTempArr[i]) && strKLTempArr[i].length === 3){
+            if(strKLTempArr[i-1] === 'góc' || !checkGoc.includes('giác')){
+                GOC.push('Góc('+ strKLTempArr[i] + ')');
+                continue;
+            } else {
+                TAMGIAC.push(strKLTempArr[i]);
+                indexItem.push(i);
+                continue;
+            }
+        } 
+
+        if(isUpper(strKLTempArr[i]) && strKLTempArr[i].length === 4){
+            TUGIAC.push(strKLTempArr[i]);
+            indexItem.push(i);
+
+            continue;
+         }
+         
+        }
+
+
+    // let strKL ='';
+    // if(GOC.length !== 0){
+    //     strKL += (strKL !== '' ? ','+GOC.join(','):GOC.join(','));
+    // }
+    // if(DOANTHANG.length !== 0) {
+    //     strKL += (strKL !== '' ? ','+DOANTHANG.join(','):DOANTHANG.join(','));
+    // }
+    KetLuan.value = [...TAMGIAC,...TUGIAC,...DOANTHANG,...GOC].join(',') + ';';
+   
+
+    console.log(strKetLuan);
+
+    let KetQuaKetLuan = [], KetLuanCauSan = [], regdexKetLuan, tempStrKetLuan = [];
+    for(let x = 0; x < MauCauKetLuan.length; x++){
+        console.log(MauCauKetLuan[x][0]);
+        regdexKetLuan = new RegExp(MauCauKetLuan[x][0],'g');
+        if(strKetLuan.match(regdexKetLuan)){
+            tempStrKetLuan.push(strKetLuan.match(regdexKetLuan));
+            strKetLuan =  strKetLuan.replace(regdexKetLuan,'');
+        } else continue;
+        
+    }
+    console.log(tempStrKetLuan);
+    console.log(strKetLuan);
+}
