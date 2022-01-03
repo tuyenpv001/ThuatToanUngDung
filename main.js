@@ -246,9 +246,9 @@ function XuLyGiaThiet(giathiet) {
 
    if(LocGiaTri.length === 0) KQGiaThiet =  KQGiaThiet;
 
-
-    GiaThiet.value = GTHinh.join(';') + ';' + KetQuaCau.join(';') + ';' + LocGiaTri.join(';') ;
-    GiaThiet.value = [...GTHinh,...KetQuaCau,...LocGiaTri].join(';') + ';';
+   if(GTHinh.length == 0)
+        GiaThiet.value = [...GTHinh,...KetQuaCau,...LocGiaTri].join(';') + ';';
+    else  GiaThiet.value = 'Cho ' + [...GTHinh,...KetQuaCau,...LocGiaTri].join(';') + ';';
 }
 
 
@@ -259,34 +259,67 @@ function XuLyGiaThiet(giathiet) {
 function XuLyKetLuan(strKetLuan) {
     let TAMGIAC = [], TUGIAC = [], DOANTHANG = [], GOC = [], CHUNGMINH = [];
     console.log(strKetLuan);
-    let regdexKetLuan, strTemp = [];
+    let regdexKetLuan, strTemp = [], strMauTemp = [], strMauCau;
 
     for(let i = 0; i < MauCauKetLuan.length; i++){
         regdexKetLuan = new RegExp(MauCauKetLuan[i][0], 'g');
         if(strKetLuan.match(regdexKetLuan)){
-            strTemp.push(strKetLuan.match(regdexKetLuan));
+            strTemp = [...strKetLuan.match(regdexKetLuan)];
+            strMauCau = MauCauKetLuan[i][1];
+            let temp = []; temp.push(strTemp); temp.push(strMauCau);
+            strMauTemp.push(temp);
             strKetLuan = strKetLuan.replace(regdexKetLuan,'');
         } else continue;
     }
 
-
-
-
-
     console.log(strTemp);
+    console.log(strMauTemp);
     console.log(strKetLuan);
 
+    let strMauArr;
+    for(let n = 0; n < strMauTemp.length; n++){
+        console.log(strMauTemp[n]);
+        strMauArr = XuLyChuyenDoiChuoi(strMauTemp[n][0], strMauTemp[n][1]);
+        console.log(strMauArr);
+        TAMGIAC.push(strMauArr);      
+    }
 
 
-
-
-
-
-
-
+    console.log(strKetLuan);
 
     KetLuan.value = [...CHUNGMINH,...TAMGIAC,...TUGIAC,...DOANTHANG,...GOC].join(',') + ';';
    
+}
+
+function XuLyChuyenDoiChuoi(arr, str){
+    let arrStr, KetQuaKl, arrKetQua = [];
+    console.log(arr);
+    for(let i = 0; i < arr.length; i++){
+        // console.log(arr[i]);
+        KetQuaKl = '';
+        arrStr = convertStrtoArray(arr[i],' ');
+        // console.log(arrStr);
+        let x = 0, nameArr = [];
+        while(x < arrStr.length){
+            if(isUpper(arrStr[x])){
+                nameArr.push(arrStr[x]);
+            }
+            x++;
+        }
+        // console.log(nameArr);
+        let l = 0;
+        while(l < nameArr.length){
+            let regdexIndex = new RegExp(l,'g');
+            if(KetQuaKl)
+                KetQuaKl = KetQuaKl.replace(regdexIndex,nameArr[l]);
+            else KetQuaKl = str.replace(regdexIndex,nameArr[l]);
+            l++
+        }
+        console.log(KetQuaKl);
+        arrKetQua.push(KetQuaKl);
+        // console.log(str);
+    }
+    return arrKetQua;
 }
 
 
