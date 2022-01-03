@@ -1,5 +1,6 @@
 /*
 -Các bước làm
+
 + Xây dựng các bộ từ đồng nghĩa, và chuyển đổi chúng sang dạng đặc tả.
 + Duyệt câu và loại bỏ các từ dư thừa, không có nghĩa khi chuyển sang đặc tả.
 + **** Ghép từng từ thành các cặp từ để phân loại
@@ -24,8 +25,6 @@ Quy ước:
     - Độ dài 2 -> Đoạn
     - Độ dài 3 -> Tam giác || Góc ==> Xét tiền tố trước nó để xác định thuộc kiểu nào
     - Độ dài 4 -> Tứ Giác ==> Xét tiền tố trước nó để xác định thuộc kiểu nào (Hình vuông, Hình chữ nhật, hình hình hành, hình thang        )
-
-
 
     */
 
