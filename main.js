@@ -9,49 +9,12 @@ let DeBai = document.querySelector('.debai');
 let GiaThiet = document.querySelector('.giathiet');
 let KetLuan = document.querySelector('.ketkuan');
 const btnKetQuan = document.querySelector('.thuchien');
-/**
- * 
- * 
- * 
- * TODO: Xây dựng xong câu cho hình
- *       Xây dựng mẫu câu cho Kết Luận 
- * 
- *  =====> XONG 80% OKKKKKKKKKKK
- * 
- */
+
 
 // TODO: Khai báo và gán các data text 
 let DSTuXoa = convertStrtoArray( readTextFile('data/TuXoa.txt'),';');
 let QuyUocChung = XuLyQuyUoc('data/QuyUoc.txt');
-console.log(QuyUocChung);
-
-// Tạo các QUY ƯỚC CHUYỂN ĐỔI TỪ
-function XuLyQuyUoc(pathStr){
-    let DsQuyUoc;
-    let QuyUoc = convertStrtoArray(readTextFile(pathStr),';');
-    QuyUoc.pop();
-    DsQuyUoc = QuyUoc.map(function(e){
-        return convertStrtoArray(e,'>')
-    })
-
-    return DsQuyUoc;
-}
-
-function XuLyChuyenDoiQuyUoc(str, arr) {
-    let tempStr, rexDeg;
-
-    for(let i = 0; i < arr.length; i++){
-        rexDeg = new RegExp(arr[i][0], 'g');
-        if(tempStr){
-            tempStr = tempStr.replace(rexDeg,arr[i][1]);
-        } else {
-            tempStr = str.replace(rexDeg,arr[i][1]);
-        }
-    
-    }
-
-    return tempStr.trim().replace(/\s+/g, ' ');
-}
+// console.log(QuyUocChung);
 
 /* =================================
 Sự kiện click thực hiện chương trình
@@ -77,14 +40,13 @@ btnKetQuan.addEventListener('click', function(e){
 
 })
 
-
 /* =================================
 Xác định phần giả thuyết và kết luận dựa vào các từ đăc trưng và đồng nghĩa
 ====================================*/
 function TachGiathietKetLuan(str){
     let strKetLuanTemp;
     let strGTTemp = convertStrtoArray(str.trim(),' ');
-    console.log(strGTTemp)
+    // console.log(strGTTemp)
     let wordTach = convertStrtoArray(readTextFile('data/QuyUocTachGTKL.txt'), ';');
     let breakPoint, checkExit = false;
 
@@ -116,8 +78,8 @@ function TachGiathietKetLuan(str){
         strGTBoSung = strKetLuanTemp.slice(breakPointKL, strKetLuanTemp.length);
         strKetLuanTemp = strKetLuanTemp.slice(0,breakPointKL);
     }
-    console.log(strKetLuanTemp);
-    console.log(strGTBoSung);
+    // console.log(strKetLuanTemp);
+    // console.log(strGTBoSung);
 
 
     return {
@@ -126,6 +88,7 @@ function TachGiathietKetLuan(str){
     }
 
 }
+
 
 function XuLyGiaTriDaBiet(arrGiaTri){
     let arrGoc;
@@ -157,7 +120,7 @@ function XuLyGiaThiet(giathiet) {
             giathiet = giathiet.replace(regdexBieuThuc,"");
         } else continue;
     }
-    console.log(BieuThucKQ);
+    // console.log(BieuThucKQ);
 
 
     let LocGiaTri = [],LocCauMau = [], rexdegGiaTri, rexDegCau , CauDaTrung,MauCau, LocCauMauTemp = [];
@@ -172,7 +135,7 @@ function XuLyGiaThiet(giathiet) {
         } else continue;
     }
     // console.log(MauCauTu);
-    console.log(LocGiaTri);
+    // console.log(LocGiaTri);
     XuLyGiaTriDaBiet(LocGiaTri);
     for(let j = 0;j < MauCauTu.length; j++){
         rexDegCau = new RegExp(MauCauTu[j][0],'g');
@@ -186,7 +149,7 @@ function XuLyGiaThiet(giathiet) {
             LocCauMauTemp = [];
         } else continue;
     }
-    console.log(LocCauMau);
+    // console.log(LocCauMau);
     let KetQuaCau = [], arrTemp, arrNameTemp = [], strKetQua, x = 0, regdexNum;
     // console.log(LocCauMau);
     for(let a = 0; a < LocCauMau.length; a++){
@@ -223,15 +186,13 @@ function XuLyGiaThiet(giathiet) {
     
     }
 
-    console.log(KetQuaCau);
-    console.log(giathiet);
 
-    let GiaThietConLai = [], GiaThietTempTrung = [], GiaThietConLaiMau = [],regdexHinh, strConLai;
+    let GiaThietTempTrung = [],regdexHinh, strConLai;
    for(let p = 0; p < MauCauHinh.length; p++){
        regdexHinh =  new RegExp(MauCauHinh[p][0],'g');
        if(giathiet.match(regdexHinh)){
            strConLai = [...giathiet.match(regdexHinh)];
-           console.log(strConLai);
+        //    console.log(strConLai);
            giathiet = giathiet.replace(regdexHinh,'');
            GiaThietTempTrung.push(strConLai);
        }
@@ -241,18 +202,66 @@ function XuLyGiaThiet(giathiet) {
    for(let n = 0; n < GiaThietTempTrung.length; n++){
        GTHinh.push(...GiaThietTempTrung[n]);
    }
-   console.log(GiaThietTempTrung);
+
    console.log(GTHinh);
-//    console.log(GiaThietConLaiMau);
-   console.log(giathiet);
-
-//    const [strKQ] = GiaThietTempTrung;
-//    console.log(strKQ);
-
+   let NgoaiLeGoc;
+   [NgoaiLeGoc,giathiet] =  XuLyNgoaiLeGTChoGoc(GTHinh, giathiet);
    if(GTHinh.length == 0)
-        GiaThiet.value = [...GTHinh,...KetQuaCau,...BieuThucKQ,...LocGiaTri].join(';') + ';';
-    else  GiaThiet.value = 'Cho ' + [...GTHinh,...KetQuaCau,...BieuThucKQ,...LocGiaTri].join(';') + ';';
+        GiaThiet.value = [...GTHinh,...KetQuaCau,...BieuThucKQ,...LocGiaTri,...NgoaiLeGoc].join(';') + ';';
+    else  GiaThiet.value = 'Cho ' + [...GTHinh,...KetQuaCau,...BieuThucKQ,...LocGiaTri,...NgoaiLeGoc].join(';') + ';';
 }
+
+// Xử lý ngoại lệ cho GÓC
+function XuLyNgoaiLeGTChoGoc(arrHinh,strGT){
+    let TENHINH = [], temp, GOCTEMP = [], QuyGoc, KETQUA = [];
+
+    for(let i = 0; i < arrHinh.length; i++){
+        temp = convertStrtoArray(arrHinh[i]," ");
+        TENHINH.push(temp[temp.length - 1]);
+    }
+
+    for(let j = 0; j < TENHINH.length; j++){
+       QuyGoc = TENHINH[j].split('');
+    }
+    GOCTEMP.push(QuyGoc[1] + QuyGoc[0] + QuyGoc[2]);
+    GOCTEMP.push(QuyGoc[0] + QuyGoc[1] + QuyGoc[2]);
+    GOCTEMP.push(QuyGoc[0] + QuyGoc[2] + QuyGoc[1]);
+    
+    let GocRutGon;
+    
+    for(let n = 0; n < QuyGoc.length; n++){
+        strGT = strGT.replace(QuyGoc[n], GOCTEMP[n]);
+        GocRutGon = strGT.match(/góc [A-Z][A-Z][A-Z](=| =)(| )([0-9]+)/g);
+        console.log(GocRutGon);
+        KETQUA.push(GocRutGon);
+        strGT = strGT.replace(/góc [A-Z][A-Z][A-Z](=| =)(| )([0-9]+)/g, "");
+    }
+    
+
+    let str  = KETQUA.join(' ');
+    console.log(str);
+    str = str.replace(/góc/g, '');
+    console.log(str.trim().replace(/\s+/g, ' '));
+    let tempArr = convertStrtoArray(str.trim().replace(/\s+/g, ' '),' ');
+    console.log(tempArr);
+    let KQCuoiCung = [];
+    for(let x = 0; x < tempArr.length; x++){
+        if(tempArr[x] === '='){
+            let a = 'Góc('+ tempArr[x-1] +') = '+tempArr[x+1];
+            KQCuoiCung.push(a);
+        }
+    }
+
+    console.log(KQCuoiCung);
+
+    return [KQCuoiCung, strGT];
+
+}
+
+
+
+
+
 
 
 
@@ -260,56 +269,41 @@ function XuLyGiaThiet(giathiet) {
     XỬ LÝ PHẦN KẾT LUẬN 
 ====================================*/
 function XuLyKetLuan(strKetLuan) {
-    let TAMGIAC = [], TUGIAC = [], DOANTHANG = [], GOC = [], CHUNGMINH = [];
-    console.log(strKetLuan);
-    // let regdexKetLuan, strTemp = [], strMauTemp = [], strMauCau;
-
-    // for(let i = 0; i < MauCauKetLuan.length; i++){
-    //     regdexKetLuan = new RegExp(MauCauKetLuan[i][0], 'g');
-    //     if(strKetLuan.match(regdexKetLuan)){
-    //         strTemp = [...strKetLuan.match(regdexKetLuan)];
-    //         strMauCau = MauCauKetLuan[i][1];
-    //         let temp = []; temp.push(strTemp); temp.push(strMauCau);
-    //         strMauTemp.push(temp);
-    //         strKetLuan = strKetLuan.replace(regdexKetLuan,'');
-    //     } else continue;
-    // }
-
-    // console.log(strTemp);
-    // console.log(strMauTemp);
+    let TAMGIAC = [], TUGIAC = [], DOANTHANG = [], GOC = [], CHUNGMINH = [] , BIEUTHUC = [];
     // console.log(strKetLuan);
 
-    // let strMauArr;
-    // for(let n = 0; n < strMauTemp.length; n++){
-    //     console.log(strMauTemp[n]);
-    //     strMauArr = XuLyChuyenDoiChuoi(strMauTemp[n][0], strMauTemp[n][1]);
-    //     console.log(strMauArr);
-    //     TAMGIAC.push(strMauArr);      
-    // }
+    if(strKetLuan.match(/[A-Z][A-Z][*-+][A-Z][A-Z] = [A-Z][A-Z][*+-][A-Z][A-Z]/g)){
+        // console.log(strKetLuan.match(/[A-Z][A-Z][*-+][A-Z][A-Z] = [A-Z][A-Z][*+-][A-Z][A-Z]/g));
+        BIEUTHUC.push(strKetLuan.match(/[A-Z][A-Z][*-+][A-Z][A-Z] = [A-Z][A-Z][*+-][A-Z][A-Z]/g));
+        strKetLuan = strKetLuan.replace(/[A-Z][A-Z][*-+][A-Z][A-Z] = [A-Z][A-Z][*+-][A-Z][A-Z]/g,'');
+        BIEUTHUC = [...BIEUTHUC[0]];
+    }
+    // console.log(BIEUTHUC);
+   
     [TAMGIAC, strKetLuan] = XuLyTrungKhopMau(MauCauKetLuan,strKetLuan);
-    console.log(TAMGIAC);
+    // console.log(TAMGIAC);
     
     console.log(strKetLuan);
     [CHUNGMINH, strKetLuan] = XuLyTrungKhopMau(MauCauChungMinh,strKetLuan);
-    console.log(CHUNGMINH);
-    console.log(strKetLuan);
+    // console.log(CHUNGMINH);
+    // console.log(strKetLuan);
     
     if(strKetLuan.match(/[A-Z][A-Z][A-Z]/g)){
         GOC = strKetLuan.match(/[A-Z][A-Z][A-Z]/g);
         strKetLuan = strKetLuan.replace(/[A-Z][A-Z][A-Z]/g,'');
     }
-    console.log(strKetLuan);
+    // console.log(strKetLuan);
     GOC = XuLyQuyUocGoc(GOC);
 
     if(strKetLuan.match(/[A-Z][A-Z]/g)){
         DOANTHANG = strKetLuan.match(/[A-Z][A-Z]/g);
         strKetLuan = strKetLuan.replace(/[A-Z][A-Z][A-Z]/g,'');
     }
-    console.log(strKetLuan);
+    // console.log(strKetLuan);
 
     if(strKetLuan.match(/[Tt]ính/))
         KetLuan.value = 'Tính:' + [...CHUNGMINH,...TAMGIAC,...TUGIAC,...DOANTHANG,...GOC].join(',') + ';';
-    else KetLuan.value = 'Chứng minh rằng: ' + [...CHUNGMINH,...TAMGIAC,...TUGIAC,...DOANTHANG,...GOC].join(',') + ';';
+    else KetLuan.value = 'Chứng minh rằng: ' + [...CHUNGMINH,...BIEUTHUC,...TAMGIAC,...TUGIAC,...DOANTHANG,...GOC].join(',') + ';';
    
 }
 
@@ -318,42 +312,39 @@ function XuLyTrungKhopMau(arr, strKL){
 
     let Mau = [], redexMau, strTemp,strMauCau,strMauTemp = [];
 
-    console.log(strKL);
+    // console.log(strKL);
     
     for(let i = 0; i < arr.length; i++){
         redexMau = new RegExp(arr[i][0], 'g');
+        // console.log(redexMau);
         if(strKL.match(redexMau)){
             strTemp = [...strKL.match(redexMau)];
             strMauCau = arr[i][1];
             let temp = []; temp.push(strTemp); temp.push(strMauCau);
             strMauTemp.push(temp);
             strKL = strKL.replace(redexMau,'');
-            console.log(strKL);
+            // console.log(strKL);
             strKL = strKL;
         } else continue;
     }
 
-    // console.log(strTemp);
-    // console.log(strMauTemp);
-    // console.log(strKL);
-
     let strMauArr;
     for(let n = 0; n < strMauTemp.length; n++){
-        console.log(strMauTemp[n]);
+        // console.log(strMauTemp[n]);
         strMauArr = XuLyChuyenDoiChuoi(strMauTemp[n][0], strMauTemp[n][1]);
-        console.log(strMauArr);
+        // console.log(strMauArr);
         Mau.push(strMauArr);      
     }
-    console.log(strKL);
+    // console.log(strKL);
     return [Mau,strKL];
 }
 
 
 function XuLyChuyenDoiChuoi(arr, str){
     let arrStr, KetQuaKl, arrKetQua = [];
-    console.log(arr);
+    // console.log(arr);
     for(let i = 0; i < arr.length; i++){
-        console.log(arr[i]);
+        // console.log(arr[i]);
         KetQuaKl = '';
         arrStr = convertStrtoArray(arr[i],' ');
         // console.log(arrStr);
@@ -373,7 +364,7 @@ function XuLyChuyenDoiChuoi(arr, str){
             else KetQuaKl = str.replace(regdexIndex,nameArr[l]);
             l++
         }
-        console.log(KetQuaKl);
+        // console.log(KetQuaKl);
         arrKetQua.push(KetQuaKl);
         // console.log(str);
     }
@@ -390,8 +381,6 @@ function XuLyQuyUocGoc(arr){
 
     return arr;
 }
-
-
 
 
 /* ================================
@@ -478,4 +467,31 @@ function readTextFile(file)
     rawFile.send(null);
 
     return allText;
+}
+// Tạo các QUY ƯỚC CHUYỂN ĐỔI TỪ
+function XuLyQuyUoc(pathStr){
+    let DsQuyUoc;
+    let QuyUoc = convertStrtoArray(readTextFile(pathStr),';');
+    QuyUoc.pop();
+    DsQuyUoc = QuyUoc.map(function(e){
+        return convertStrtoArray(e,'>')
+    })
+
+    return DsQuyUoc;
+}
+
+function XuLyChuyenDoiQuyUoc(str, arr) {
+    let tempStr, rexDeg;
+
+    for(let i = 0; i < arr.length; i++){
+        rexDeg = new RegExp(arr[i][0], 'g');
+        if(tempStr){
+            tempStr = tempStr.replace(rexDeg,arr[i][1]);
+        } else {
+            tempStr = str.replace(rexDeg,arr[i][1]);
+        }
+    
+    }
+
+    return tempStr.trim().replace(/\s+/g, ' ');
 }
