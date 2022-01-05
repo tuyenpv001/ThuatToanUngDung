@@ -204,11 +204,13 @@ function XuLyGiaThiet(giathiet) {
    }
 
    console.log(GTHinh);
-   let NgoaiLeGoc;
-   [NgoaiLeGoc,giathiet] =  XuLyNgoaiLeGTChoGoc(GTHinh, giathiet);
+   let NgoaiLeGoc = [];
+   if(giathiet.includes('góc')){
+       [NgoaiLeGoc,giathiet] =  XuLyNgoaiLeGTChoGoc(GTHinh, giathiet);
+   }
    if(GTHinh.length == 0)
-        GiaThiet.value = [...GTHinh,...KetQuaCau,...BieuThucKQ,...LocGiaTri,...NgoaiLeGoc].join(';') + ';';
-    else  GiaThiet.value = 'Cho ' + [...GTHinh,...KetQuaCau,...BieuThucKQ,...LocGiaTri,...NgoaiLeGoc].join(';') + ';';
+        GiaThiet.value = [...GTHinh,...KetQuaCau,...BieuThucKQ,...LocGiaTri,...NgoaiLeGoc].join(';\n') + ';';
+    else  GiaThiet.value = 'Cho ' + [...GTHinh,...KetQuaCau,...BieuThucKQ,...LocGiaTri,...NgoaiLeGoc].join(';\n') + ';';
 }
 
 // Xử lý ngoại lệ cho GÓC
@@ -260,11 +262,6 @@ function XuLyNgoaiLeGTChoGoc(arrHinh,strGT){
 
 
 
-
-
-
-
-
 /* ================================
     XỬ LÝ PHẦN KẾT LUẬN 
 ====================================*/
@@ -302,7 +299,7 @@ function XuLyKetLuan(strKetLuan) {
     // console.log(strKetLuan);
 
     if(strKetLuan.match(/[Tt]ính/))
-        KetLuan.value = 'Tính:' + [...CHUNGMINH,...TAMGIAC,...TUGIAC,...DOANTHANG,...GOC].join(',') + ';';
+        KetLuan.value = 'Tính: ' + [...CHUNGMINH,...TAMGIAC,...TUGIAC,...DOANTHANG,...GOC].join(',') + ';';
     else KetLuan.value = 'Chứng minh rằng: ' + [...CHUNGMINH,...BIEUTHUC,...TAMGIAC,...TUGIAC,...DOANTHANG,...GOC].join(',') + ';';
    
 }
@@ -406,7 +403,7 @@ function convertStrtoLowerCase(str){
     Xóa các ký tự đặc biệt
 ====================================*/
 function XoaCacKyHieu(str){
-    return str.replace(/[\n,.;)(:\/?]|cm|km|mm|cm2|mm2|deg|hm|dam|dm|mm|m2|km2/g,' ').trim().replace(/\s+/g, ' ');
+    return str.replace(/[\n,.;)(:\/?#$@!%&]|cm|km|mm|cm2|mm2|deg|hm|dam|dm|mm|m2|km2/g,' ').trim().replace(/\s+/g, ' ');
     // str.replace(/\n/g,'').replace(/[,.]/g,' ').replace(/cm/g,'');
 }
 
