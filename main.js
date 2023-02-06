@@ -21,22 +21,28 @@ Sự kiện click thực hiện chương trình
 ====================================*/
 btnKetQuan.addEventListener('click', function(e){
     e.preventDefault();
+    
+    if(DeBai.value){
+        // Xóa các ký hiệu 
+        const debaiStr = XoaCacKyHieu(DeBai.value);
+        //Chuyển đổi Quy ƯỚC
+        const debaiStrQuyUoc = XuLyChuyenDoiQuyUoc(debaiStr, QuyUocChung);
+        // Xóa các từ thừa
+        const debaiStrXoaTuThua = XoaTuThua(debaiStrQuyUoc);
+        console.log(debaiStrXoaTuThua);
+    // TODO: Xử lý nhận dạng tách thành 2 phần GIẢ THIẾT và KẾT LUẬN
+        const {GiaThietTemp, KetLuanTemp} = TachGiathietKetLuan(debaiStrXoaTuThua);
+        GiaThiet.value = GiaThietTemp;
+        KetLuan.value = KetLuanTemp;
+    // TODO: Xử lý phần GIẢ THIẾT
+        XuLyGiaThiet(GiaThietTemp);
+    // TODO: Xử lý phần KẾT LUẬN
+        XuLyKetLuan(KetLuanTemp);
+    } else  {
+        alert('Vui lòng nhập đề bài toán!!!');
+    }
 
-    // Xóa các ký hiệu 
-    const debaiStr = XoaCacKyHieu(DeBai.value);
-    //Chuyển đổi Quy ƯỚC
-    const debaiStrQuyUoc = XuLyChuyenDoiQuyUoc(debaiStr, QuyUocChung);
-    // Xóa các từ thừa
-    const debaiStrXoaTuThua = XoaTuThua(debaiStrQuyUoc);
-    console.log(debaiStrXoaTuThua);
-// TODO: Xử lý nhận dạng tách thành 2 phần GIẢ THIẾT và KẾT LUẬN
-    const {GiaThietTemp, KetLuanTemp} = TachGiathietKetLuan(debaiStrXoaTuThua);
-    GiaThiet.value = GiaThietTemp;
-    KetLuan.value = KetLuanTemp;
-// TODO: Xử lý phần GIẢ THIẾT
-    XuLyGiaThiet(GiaThietTemp);
-// TODO: Xử lý phần KẾT LUẬN
-    XuLyKetLuan(KetLuanTemp);
+    
 
 })
 
